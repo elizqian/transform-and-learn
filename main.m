@@ -4,7 +4,7 @@ addpath('periodic-euler','helper-functions')
 
 % FOM parameters
 N       = 200;
-dt      = 5e-6;
+dt      = 1e-5;
 Tfinal  = 1e-2;
 xgrid   = linspace(0,2,N+1)';
 xgrid   = xgrid(1:end-1);
@@ -50,7 +50,7 @@ R = cat(2,r_all{:});
 [U,s,~] = svd(W,'econ');
 
 % set POD basis size (same as dimension of model to be learned)
-r = 40;
+r = 20;
 Ur = U(:,1:r);
 
 % project data
@@ -64,9 +64,10 @@ Wsq = get_x_sq(What');
 F = tikhonov(Rhat',Wsq,0.001)';    % gets non-redundant coefficients of quadratic terms
 H = F2H(F);                         % converts coefficients to matricized tensor H
 
+disp(['Transform & Learn model of size r = ',num2str(r),' learned from ',num2str(M),' random training trajectories.'])
 %% COMPUTE TRANFORM & LEARN TRAINING ERROR
 ndtime = time/ndc.t;
-f_rom = @(w) ndc.l*H*kron(w,w);     % define nondim ROM residual
+f_rom = @(w) H*kron(w,w);     % define nondim ROM residual
 
 training_err = zeros(M,1);
 for i = 1:M
