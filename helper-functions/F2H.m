@@ -1,6 +1,16 @@
-% converts F matrix output from operator inference into bilinear H form
-% probably could be more efficient but I don't know how much I'm going to
-% be using this code so I won't optimize right now (18 April 2018)
+% converts F matrix operator which operates on get_x_sq output (no
+% Kronecker redundancy) to tensorized matrix operator H which operates on
+% kron(x,x) output (with redundancy)
+
+% INPUT
+% F     w-by-(w*(w+1)/2) matrix operator that acts on get_x_sq.m output,
+
+% OUTPUT
+% H     w-by-w^2 tensorized matrix operator that acts on kron(x,x)
+
+% AUTHOR
+% Elizabeth Qian (elizqian@mit.edu) 17 June 2019
+
 function H = F2H(F)
 
 [n,~] = size(F);
